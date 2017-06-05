@@ -3,10 +3,11 @@
  */
 class RomanOperations {
 
-	def romanNumeralTransformer
+	def numeralTranformer
 
-	def sum(def firstRoman, def secondRoman) {
-		def arabicSum = romanNumeralTransformer.transformToArabic(firstRoman) + romanNumeralTransformer.transformToArabic(secondRoman)
-		return romanNumeralTransformer.transform(arabicSum)
+	def sum(firstRoman, secondRoman) {
+		def firstArabic = numeralTranformer.transformToArabic(firstRoman)
+		def secondArabic = numeralTranformer.transformToArabic(secondRoman)
+ 		return numeralTranformer.transform(firstArabic + secondArabic)
 	}
 }

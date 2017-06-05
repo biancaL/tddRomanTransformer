@@ -5,24 +5,15 @@ import spock.lang.Unroll
 @Slf4j
 class RomanNumeralTransformerSpec extends Specification {
 
-
-	def "it should pass"() {
-		expect:
-		true
-	}
-
 	@Unroll
 	def "arabic numeral #arabicNumeral should return roman numeral #expectedRomanNumeral"() {
-		given:
-		def transformer = new RomanNumeralTransformer()
+		when: "Arabic numeral is transformed to roman numeral"
+		def result = new NumeralTransformer().transform(arabicNumeral)
 
-		when:
-		def result = transformer.transform(arabicNumeral)
-
-		then:
+		then: "Result is #expectedRomanNumeral"
 		result == expectedRomanNumeral
 
-		where:
+		where: "Arabic numeral #arabicNumeral"
 		arabicNumeral | expectedRomanNumeral
 		1             | "I"
 		2             | "II"
@@ -35,56 +26,42 @@ class RomanNumeralTransformerSpec extends Specification {
 		9             | "IX"
 		10            | "X"
 		11            | "XI"
-		12            | "XII"
-		12            | "XII"
-		13            | "XIII"
-		14            | "XIV"
 		15            | "XV"
-		16            | "XVI"
-		17            | "XVII"
-		18            | "XVIII"
-		19            | "XIX"
 		20            | "XX"
-		21            | "XXI"
-		37            | "XXXVII"
-		40            | "XL"
-		41            | "XLI"
-		59            | "LIX"
-		100           | "C"
-		4984          | "MMMMCMLXXXIV"
+		30            | "XXX"
+		40            | "LC"
+		41            | "LCI"
+		3789          | "MMMDCCLXXXIX"
 	}
 
-	def "returns the sum of two roman numerals"() {
+	def "throws exception for arabicNumeral #arabicNumeral"() {
+		when: "Arabic numeral is transformed"
+		new NumeralTransformer().transform(arabicNumeral)
+
+		then: "IllegalArgumentException is thrown"
+		thrown(IllegalArgumentException)
+
+		where: "Arabic numeral is"
+		arabicNumeral << [0, -1, 5000]
+	}
+
+	def "returns sum between #firstRoman and #secondRoman"() {
 		given:
-		def romanOperations = new RomanOperations()
-		romanOperations.romanNumeralTransformer = Mock(RomanNumeralTransformer)
+		def operations = new RomanOperations()
+		operations.numeralTranformer = Mock(NumeralTransformer)
+
 
 		when:
-		def sum = romanOperations.sum(firstRoman, secondRoman)
+		def result = operations.sum(firstRoman, secondRoman)
 
 		then:
-		1 * romanOperations.romanNumeralTransformer.transformToArabic(firstRoman) >> 1
-		1 * romanOperations.romanNumeralTransformer.transformToArabic(secondRoman) >> 1
-		1 * romanOperations.romanNumeralTransformer.transform(2) >> "II"
-		sum == expectedSum
+		1 * operations.numeralTranformer.transformToArabic(firstRoman) >> 1
+		1 * operations.numeralTranformer.transformToArabic(secondRoman) >> 2
+		1 * operations.numeralTranformer.transform(3) >> "III"
+		result == expectedSum
 
 		where:
 		firstRoman | secondRoman || expectedSum
-		"I"        | "I"          | "II"
-
-	}
-	@Unroll
-	def "throws IllegalArgumentException when arabicNumeral is #arabicNumeral"() {
-		given:"Roman numeral transformer class"
-		def romanNumeralTransformer = new RomanNumeralTransformer()
-
-		when:"Transform method is called on arabicNumeral"
-		romanNumeralTransformer.transform(arabicNumeral)
-
-		then:"IllegalArgumentException is thrown"
-		thrown(IllegalArgumentException)
-
-		where:"Arabic numeral is #arabicNumeral"
-		arabicNumeral << [0, -1, 4000, 4001]
+		"I"        | "II"         | "III"
 	}
 }
