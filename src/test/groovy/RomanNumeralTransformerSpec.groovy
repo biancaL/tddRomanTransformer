@@ -1,61 +1,60 @@
+import groovy.util.logging.Slf4j
 import spock.lang.Specification
 import spock.lang.Unroll
 
-
+@Slf4j
 class RomanNumeralTransformerSpec extends Specification {
 
 
-	def arabicToRoman = [1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 9: "IX", 10: "X"]
+	private Object result
 
-	def "it should fail"() {
+	def "it should pass"() {
 		expect:
 		true
 	}
 
-	@Unroll
-	def "it should return #expectedResult"() {
+	def "arabic 1 should be transformed in roman numeral I"() {
+		given:
+		def arabicNumeral = 1
+		def expected = "I"
+
 		when:
-		def romanNumeral = transform(arabicNumeral)
+		def actual = tranformToRoman(arabicNumeral);
 
 		then:
-		romanNumeral == expectedResult
+		expected == actual;
+
+	}
+
+	Object tranformToRoman(int arabicNumeral) {
+		return "I"
+	}
+
+	@Unroll
+	def "arabic #arabicNumeral should be transformed in roman numeral #expected - TDD as if you meant it"() {
+		when:
+
+		def actual = concatenateRomanNumeral(arabicNumeral)
+
+		then:
+		expected == actual
 
 		where:
-		arabicNumeral || expectedResult
-		1             || "I"
-		2             || "II"
-		3             || "III"
-		4             || "IV"
-		5             || "V"
-		6             || "VI"
-		7             || "VII"
-		8             || "VIII"
-		9             || "IX"
-		10            || "X"
-		11            || "XI"
-		12            || "XII"
-		13            || "XIII"
-		14            || "XIV"
-		15            || "XV"
-		16            || "XVI"
-		17            || "XVII"
-		18            || "XVIII"
-		19            || "XIX"
-		20            || "XX"
+		arabicNumeral | expected
+		1             | "I"
+		2             | "II"
+		3             | "III"
 	}
 
-	def transform(def arabicNumeral) {
-		def romanCorespondent = arabicToRoman[arabicNumeral]
-		if (romanCorespondent) {
-			return romanCorespondent
-		}  else if (arabicNumeral / 10 >= 1) {
-			def remainder = arabicNumeral % 10
-			return arabicToRoman[10] + transform(remainder)
-		}
-		else {
-			def remainder = arabicNumeral % 5
-			def romanRemainder = arabicToRoman[remainder]
-			return arabicToRoman[5] + romanRemainder
-		}
+	private concatenateRomanNumeral(int arabicNumeral) {
+		def result = ""
+		(1..arabicNumeral).each { it -> result += getRomanOne() }
+		return result
 	}
+
+
+	private getRomanOne() {
+		"I"
+	}
+
 }
