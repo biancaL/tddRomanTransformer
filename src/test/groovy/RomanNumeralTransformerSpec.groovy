@@ -12,7 +12,7 @@ class RomanNumeralTransformerSpec extends Specification {
 
 	@Unroll
 	def "arabic numeral #arabicNumeral should return roman numeral #expectedRomanNumeral"() {
-		when:"Tranformer method is applied on arabicNumeral"
+		when:"Transformer method is applied on arabicNumeral"
 		def result = transform(arabicNumeral)
 
 		then:"Result is #expectedRomanNumeral"
